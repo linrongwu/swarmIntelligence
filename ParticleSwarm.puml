@@ -1,0 +1,20 @@
+@startuml
+class pso.ParticleSwarm {
+- List<Particle> particles
+- Integer nPop
+- Integer dim
+- List<BigDecimal> positionUp
+- List<BigDecimal> positionDown
+- BigDecimal wMax
+- BigDecimal wMin
+- BigDecimal c1
+- BigDecimal c2
+- Integer maxIt
+- FitnessFunction fitnessFunction
+- Particle gBestParticle
++ void initParticles()
++ void iterativeParticles()
+}
+
+
+@enduml
