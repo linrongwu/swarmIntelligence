@@ -1,6 +1,0 @@
-@startuml
-interface fitness.FitnessFunction {
-~ BigDecimal fitnessFunction(List<BigDecimal>)
-}
-
-@enduml
