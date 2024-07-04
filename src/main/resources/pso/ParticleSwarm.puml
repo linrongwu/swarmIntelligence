@@ -1,5 +1,6 @@
 @startuml
-class pso.ParticleSwarm {
+class ParticleSwarm {
+- Particle gBestParticle
 - List<Particle> particles
 - Integer nPop
 - Integer dim
@@ -11,9 +12,8 @@ class pso.ParticleSwarm {
 - BigDecimal c2
 - Integer maxIt
 - FitnessFunction fitnessFunction
-- Particle gBestParticle
 + void initParticles()
-+ void iterativeParticles()
++ List<BigDecimal> iterativeParticles()
 }
 
 

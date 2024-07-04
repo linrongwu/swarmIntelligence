@@ -1,5 +1,5 @@
 @startuml
-class pso.Particle {
+class Particle {
 - List<BigDecimal> position
 - List<BigDecimal> velocity
 - List<BigDecimal> best
@@ -8,8 +8,6 @@ class pso.Particle {
 + void velocityInit(Integer)
 + void velocityUpdate(BigDecimal,BigDecimal,BigDecimal,List<BigDecimal>)
 + void positionUpdate(List<BigDecimal>,List<BigDecimal>,FitnessFunction)
-+ List<BigDecimal> getBest()
-+ BigDecimal getBestFit()
 }
 
 
