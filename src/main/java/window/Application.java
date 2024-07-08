@@ -13,6 +13,8 @@ import pso.standard.ParticleSwarm;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 public class Application extends javafx.application.Application {
 
@@ -32,7 +34,7 @@ public class Application extends javafx.application.Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws ExecutionException, InterruptedException {
         FitnessFunction fitnessFunction = fitnessFunction();
         int dim = 50;
         List<BigDecimal> positionUp = new ArrayList<>();
@@ -51,19 +53,20 @@ public class Application extends javafx.application.Application {
         int maxIt = 200;
         ParticleSwarm particleSwarm = new ParticleSwarm(nPop, dim, positionUp, positionDown,
                 wMax, wMin, c1, c2, maxIt, fitnessFunction);
+        FutureTask<List<BigDecimal>> particleSwarmTask = new FutureTask<>(new AppTask(particleSwarm));
+        new Thread(particleSwarmTask).start();
 
         BigDecimal m = BigDecimal.valueOf(500);
         int x = 5;
         int groupNumb = 10;
-        BigDecimal c3 = BigDecimal.valueOf(1.7);
+        BigDecimal c3 = BigDecimal.valueOf(2.7);
         GaussianParticleSwarm gaussianParticleSwarm = new GaussianParticleSwarm(nPop, dim, positionUp, positionDown,
                 wMax, wMin, c1, c2, maxIt, fitnessFunction,
                 m, x, groupNumb, c3);
-
-        particleSwarm.initParticles();
-        List<BigDecimal> data1 = particleSwarm.iterativeParticles();
-        gaussianParticleSwarm.initParticles();
-        List<BigDecimal> data2 = gaussianParticleSwarm.iterativeParticles();
+        FutureTask<List<BigDecimal>> gaussianParticleSwarmTask = new FutureTask<>(new AppTask(gaussianParticleSwarm));
+        new Thread(gaussianParticleSwarmTask).start();
+        List<BigDecimal> data1 = particleSwarmTask.get();
+        List<BigDecimal> data2 = gaussianParticleSwarmTask.get();
         XYChart.Series<Double, Double> series1 = new XYChart.Series<>();
         XYChart.Series<Double, Double> series2 = new XYChart.Series<>();
         buildSeries(series1, data1);

@@ -1,13 +1,14 @@
 package pso.standard;
 
 import fitness.FitnessFunction;
+import swarmIntelligence.SwarmIntelligence;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ParticleSwarm {
+public class ParticleSwarm implements SwarmIntelligence {
     private Particle gBestParticle;
     private final List<Particle> particles;//粒子群
     private final Integer nPop;//粒子群数量
@@ -126,5 +127,11 @@ public class ParticleSwarm {
 
     public List<Particle> getParticles() {
         return particles;
+    }
+
+    @Override
+    public List<BigDecimal> iterative() {
+        this.initParticles();
+        return this.iterativeParticles();
     }
 }

@@ -1,12 +1,15 @@
 package pso.gaussian;
 
 import fitness.FitnessFunction;
+import math.MathUtil;
 import pso.standard.Particle;
 import pso.standard.ParticleSwarm;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GaussianParticleSwarm extends ParticleSwarm {
@@ -26,23 +29,6 @@ public class GaussianParticleSwarm extends ParticleSwarm {
         this.num = 0;
     }
 
-    private BigDecimal getMean(List<BigDecimal> list) {
-        return list.stream().reduce(BigDecimal.ZERO, BigDecimal::add).divide(new BigDecimal(list.size()), 10, RoundingMode.DOWN);
-    }
-
-    private BigDecimal getVariance(BigDecimal mean, List<BigDecimal> list) {
-        BigDecimal variance = BigDecimal.ZERO;
-        for (BigDecimal data : list) {
-            variance = variance.add(data.subtract(mean).pow(2));
-        }
-        variance = variance.divide(BigDecimal.valueOf(list.size()), 10, RoundingMode.DOWN);
-        return variance;
-    }
-
-    private BigDecimal getGaussian(BigDecimal mean, BigDecimal variance) {
-        Random random = new Random();
-        return BigDecimal.valueOf(Math.sqrt(variance.doubleValue()) * random.nextGaussian() + mean.doubleValue());
-    }
 
     @Override
     public void initParticles() {
@@ -98,8 +84,8 @@ public class GaussianParticleSwarm extends ParticleSwarm {
         List<BigDecimal> varianceList = new ArrayList<>();
         for (int j = 0; j < this.getDim(); j++) {
             List<BigDecimal> jDim = getGaussianDimList(particleTop, j);
-            BigDecimal meanJDim = getMean(jDim);
-            BigDecimal varianceJDim = getVariance(meanJDim, jDim);
+            BigDecimal meanJDim = MathUtil.getMean(jDim);
+            BigDecimal varianceJDim = MathUtil.getVariance(meanJDim, jDim);
             meanList.add(meanJDim);
             varianceList.add(varianceJDim);
         }
@@ -107,7 +93,7 @@ public class GaussianParticleSwarm extends ParticleSwarm {
             GaussianParticle gp = (GaussianParticle) p;
             List<BigDecimal> gaussian = new ArrayList<>();
             for (int j = 0; j < this.getDim(); j++) {
-                gaussian.add(getGaussian(meanList.get(j), varianceList.get(j)));
+                gaussian.add(MathUtil.getGaussian(meanList.get(j), varianceList.get(j)));
             }
             gp.velocityUpdate(w, this.getC1(), this.getC2(), c3, this.getgBestParticle().getBest(), gaussian);
             gp.positionUpdate(this.getPositionUp(), this.getPositionDown(), this.getFitnessFunction());
